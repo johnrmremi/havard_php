@@ -1,0 +1,535 @@
+$$$$$$$$$$$$$$$$$$....... Lecture 0 ......$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$.......$$$$$$$$
+
+programming is becoming less about implementing everything from scratch, and more about
+wiring things together.
+
+taking offtheshelf parts, libraries that other people have developed, SDKS that other
+people have provided (Read more on the differences between SDKs and APIs).
+
+Http, Html, CSS, DNS, Web Hosting, Virtual Private Servers
+
+PHP is among of the popular options like rubby, python e.t.c. Nice thing about php is that
+it's learning curve is low. Best documentation.
+
+Focus here is not to accomplish some tasks, but how to do it well. Design choices will be
+our main theme.
+
+Dive into the features of the language, like what does it mean that php support sessions, 
+automatic cookies management, mantaining the state, login, registration, e.t.c.
+
+Interaction between user, internet, server, operating system and disk. i.e. what pieces
+exactly get involved.
+
+Not only how to use php in these related technologies to run a site, but to run a big site with
+thousands of users. you will start to make priorities on design decisions about database schemas,
+the kind of code that you are writing, how and where you host your libraries. wide range of 
+divices with different capabilities.
+
+xml, database(MySQL):
+
+XML: simpler technology, like html in spirit, make your own tags, with it you can define flat
+files i.e. text file type of database.
+If you don't real need the power and sofisticatioin of SQL language (MySQL is the specific
+incarnation of SQL). Sometimes just implementing the configuration file (small few kbs or mbs)
+database is well suited for just local file. Because if you are running code stored on disk, you
+already have your storage engine, you don't need to figure out how to install database, you don't 
+need to keep database running, you don't need to consume ram the database requires.
+It's like using not real database, and actually using XML, not just as flat file itself but we will
+use some related technologies, languages(XML path language, query language much like system files
+paths e.g. /usr/bin/) wuth that syntax you can navigate hierachickly in XML. On search you can 
+query XML file and get back pieces of data that you want. You don't have to go grapping through it
+or finding the data yourself there is existing language for this.
+
+SQL is the language used to interact with many of the most popular database engines these days.
+e.g. Oracle, Microsoft Access, Mysql, Postgresql e.t.c.
+
+SQL store data, retrieve data, search data.
+
+Client side(Javascript) with these kinds of language we have things like google maps, chat window
+in facebook, in Javascript we will look specifically to AJAX technique.
+
+AJAX defines the ability of web page after it has been loaded to go back to the server behind the
+sceen and get more data. e.g. google maps click and drag.
+
+User interface: You can have subdomain in email addresses.
+
+More sophisticated websites become more like apps and less like static contents.
+
+Security and scalability. You should understand how the data is getting from client to server
+and back. things like crossite scripting attack, sql injection attacks. The irony is at least
+in php one function call can fix all of those problems.
+
+Scallability (users and data)
+
+Project 0: Buying your domain, configuring DNS, to point your domain and subdomains.
+
+
+------------------------------------------ Domains -----------------------------------
+Web development is not only about coding, but you need also place to put it. So 
+1) You need to get the domain name
+2) Map that domain name to specific geography in the world (The specific server)
+3) Make shure that there is actually server there.
+
+
+Suppose i sit on my conmputer (point A) connected to the internent with the google server (point B).
+Typing in browser google.com and hit Enter:
+Human friendly form of an IP addresses, but that is insufficient to tell to actually get
+from point A to point B. Because internent is driven by the routers (i.e. servers that
+takes data in and send them in other way, they route information sometimes called gateways)
+
+Routers for efficiencty reasons, don't use the domain names/host names/full qualified domain
+names intead they use the IP addresses. These are numbers in the form (w.x.y.z) each placeholder
+is a number from 0 to 255 with some restrictions.
+So in total you have (byte.byte.byte.byte) total 4 bytes or 32 bits. This means more than
+4 Billion IP addresses available on the world.
+
+So after typing google.com on my browser, my computer now need to translate google.com to an
+IP address. that will identify server or computer on the internet.
+Routers knows direction to send an IP address, they use heuristics/lookup tables to figure out
+which direction the data is supposed to flow.
+
+Users really don't care, but this is relevant to the story Because someone needs to do these
+conversions for me. Because my computer does not have big exhaustive database of all 4 Billion
+IP addresses and their corresponding domain names/host names.
+
+So my computer needs to ask for help, that help is asked from the server called DNS Server.
+
+So in the mid way there is Domain Names System Servers (DNS Server).
+
+DNS Server are ISPs (Internet Service Providers e.g. Airtel), Companies e.g. Havard, these server
+leave pretty close to me on the network. And when i send out these requests e.g. google.com, it is
+that server or some set of servers that are supposed to reply with answer. i.e with specific
+ip address.
+Very possible for these small fish ISP(these DNS servers that doesn't know what google.com IP
+addresses is). If so there is a hierachy built to DNS, this is all what makes it work.
+
+if this guy doesn't know -- he ask this guy -- if he doesn't know -- he ask this guy and so forth
+you can have this recursive process. thankfully we have small number of authoritative DNS servers
+that do know who knows what all .com mappings are for instance or what all .gov mappings are for
+instances. 
+If DNS server is smart caches to avoid to go again through all tidious steps. So next time my
+sibling or whetever requests the same web page, it don't have to go through the internet get that
+map between IP and host name. It is already leaving in that DNS server.
+
+Downside of catching that IP address:
+1) If IP address changes.
+   This may not happen very often, but it does happen. if it happen it can be painful especially
+   for dyanimic websites. This is problematic because if you have to move your IP address it is 
+   hard to move every one on the internent at once to the new server. Because some of those
+   people may have remembered your old IP addresses.
+
+   This suggest you have to leave your servers in two places, now you have two databases, 
+   how you synchronizes these two things, do you redirect someone to new temporary domain? whole
+   lots of headches arises.
+
+   Some advance planning can help with these things as we will see on Scallability topic.
+
+Now I know google.com IP addresses, so my operating system sends out subsequent request this
+time addressed to not local DNS server but to that specific IP address. Thinking this like little
+envelope in the mail system, the return address will be my IP address.
+The requests goes from router to router hopeflly within some small number of hobs/steps that packet
+reaches google.com.
+
+packet has technical meaning but for our case, it is just envelope, some kind of request for
+web page.
+
+What that request look like?
+What the language does browser and web servers speak?
+
+Ans: Http
+
+The traffic that goes back and forth here HTTP (Hyper Text Transfer Protocal) is simple language
+with only few commands we care about from developers perspective. But just a language that
+browser and servers speak. It is a Protocal that two devices speak.
+On simplest form the web browser says GET / (get the root of your website i.e. cnn.com/ or 
+google.com/) or it could be a longer path or file name. then mention what language iam speaking
+GET / HTTP
+
+When google.com receives this, there is a piece of software there that opens this envelope
+looks inside sees this message and realizes i as web server needs to returm to the user /
+it may be index.html, default.asp etc.
+
+Assume for now / represent text file, server reads those bytes from disk, write them out to the
+network similarly addressing them to my IP address given as return address in client request
+they reach to me and i see google.com search page. That will be the result of the response
+envelope e.g. if it is html my browser reads it from top to bottom left to right render it on
+the screen and the connection closed.
+Closing connection has interesting implications for performance and scalability. And the the 
+little icon stop spinning and done.
+
+Http is called stateless Protocal, unlike something like SSH, FTP, or other protocals that
+constantly mantain an active internent connection. Curious thing about http is that you
+make request you get your response and for the most part that is it, connection close.
+
+All of the underlying TCP and IP stuffs closes down, and the connection stops and the fact that
+the little icon is no longer spinning means your browser is no longer talking to the server.
+
+You can unplug from the internent walk away and so long as you don't close the window you
+can still see those contents.
+
+This is good for scalability, web requests tends to be fairy small in byte size, if i am only
+talking to a server for a split second, a whole lot of people can probably talk to the same
+server in that one second.
+
+But now the websites are increasingly dyanimic, this suggests you are constantly getting more
+and more information from the server. AJAX, Javascript is about how do we implements states
+and mantain constant stream of information efficienctly.
+
+AJAX(Asynchronous Javascript and XML): Asynchronous as how to make subsequent calls again and 
+again and deal with them camming back perhaps out of order.
+
+
+-----------------------------------Buying Domain Names-----------------------------------------------
+Finding available domain name is hardest thing. You have to buy for example from:
+
+1) godaddy.com, one of the hardest part is to fight your way to the shopping cart.
+
+For Companies that are targeting non technical people there is utility in using .com more than
+.net or .org domain names. Because normal people knows that something.com is a website where
+something.co, something.biz, something.ag looks little wierd.
+
+After buying your domain name, now the whole world does not know that it exists. So the next thing
+is to tell your registrar e.g if godaddy.com what the names servers are. i.e. what the DNS servers
+are that are going to mapp your domain name to the one or more IP addresses that ultimately are
+going to correspond to it. For example google in reality they have few IP addresses that are
+publickly exposed for load balancing purposes. The DNS servers on the internent themselves will
+know how to map your something.com to an IP address.
+
+So How to decide names server to use:
+Generally you first choose your web host, this may be your own web server or pay someone on
+monthly basis for a web hosting account.
+ 
+It could be a shell account, you can SSH to it, SFTP e.t.c or like web interface so you can write
+your code on your own machine and just upload via web based upload utility to the server and
+any configuration you do of your website you do via web panel and pay few dollars per month.
+e.g. web hosting Companies is dream host.
+Any one can start web hosting company all you need is a single server and freely downloadable
+software to Virtualize that server or to create multiple user accounts on it via the web and you
+get what you paid for.
+If you find web hosting company that is going to sell you web space in whole alot of GBs for 2$ a
+month it's great deal but ask, how many days in the month the website can be up.
+
+So you choose a company, you sign up for an account, then you can start uploading your content
+then that company will tell you what addresses are of their DNS server e.g ns1.dreamhost.com
+
+Then you go back to your registrar and you type on the appropriate field ns1.dreamhost.com
+
+After few minutes or hours someone typing something.com your DNS server may not know,
+that request may propagate to the root server but that root servers do knows who knows where
+all the .com mappings between host and IPs are kept, and that is what your registrar did for you.
+
+The fact that you told them DNS server you are using, now you are up and running except you need
+to make shure that the web server is running.
+
+Summary:
+i) Buy domain name
+ii) Choose and pay for web host
+iii) Tell the registrar what the dns server are 
+iv) implement that website
+
+--------------------------------------------------------------------------------------------------
+There is design expectation, your code must at least valid html 4.1, xhtml 1.0, html 5 .i.e.
+adhiring to standards.
+One of the most useful things about setting these standards validators.w3.org, this website will
+tell you if your website is syntacticaly valid.
+
+In real world sometimes you need to break validity to accomplish something useful, you really
+need to embed that tag that isn't necessary valid. With Javascript these days you can circumvent
+the idea of validity and insert stuffs to the DOM.
+
+Most students prefer to do their active development on their own laptops/on their own web Servers
+
+For Linux servers, you can download hypervisor called virtual box, with this you can boot your
+own enviroment that is configured as Linux server.
+
+XAMPP is another option. This is downloadable executable package and it install for you APACHE 
+which is web server (most popular free high performance web server) altenative to unfamiliar 
+things like Microsoft IIS, Light, engineX on Linux world. e.t.c.
+
+Good thing about XAMPP(cross-platform, Apache, MySQL, PHP and Perl), they install all these
+things for you, so you don't have to go like to five different websites and getting all these
+things working together.
+
+Another altenative is MAMP(Mac OS X, Apache, MySQL, and PHP)
+
+Another altenative is LAMP(Linux, Apache, MySQL, and PHP)
+
+Useful if you travel alot, if you like to work offline you can just install these things. But
+it is the same software that you will find available to you on web hosting companies...
+
+Real world problem to be solved is also getting your code to work on another platform.
+
+
+------------------------------------------ DNS --------------------------------------------------------
+
+Once you know who is hosting the DNS servers for your domain name, then you can start creating
+various DNS records, different records do different things. e.g. NS record. 
+Telling the world what your website name servers are going to be, this is essentially creating NS
+record.
+
+Others records A, CNAME, MX, NS
+
+MX record stands for mail exchange, this type of record inform the world, what IP addresses are
+of your mail server(s). This is to say you don't have to host your email at the same physical
+server that your website leaves at or whetever other internent Services you are running.
+
+Generally within MX record you will install multiple records with numbers corresponding to them
+e.g. mx10 is certain IP address e.t.c. This means if the world is trying to email someone in your
+domain name, their computers ask for the IP address of your mail server, get first record e.g.
+mx10 then they try to send email to that address if it does't respond try mx20, mx30 e.t.c.
+Numbers tend to jump in increment of 10 mostly by convention. This allows you to have multiple
+servers ready and waiting to receive email for your domain or subdomain (post.havard.edu that is
+subdomain with its own DNS record or records).
+You set up that once.
+
+It is worth mentioning it now, though it is easy wiring things together to solve problems that
+you have e.g. using googleapps.
+
+Here we run our own mail server and we have our own DNS record pointing to our own server, our
+own spam filtering this is completely headache.
+
+In google apps you sign for an account and say i want to host something.net mail here, they then
+tells you here is the list of mx records you need to create with your registrar, you then login
+to your registrar create those appropriate mx records and some number of minutes or hours later
+if someone in the world mail something.net. Initial contact may be made to your DNS server but
+then it is tell the IP address of google server so the email get routed to google server.
+
+After setting our mail server, We might be developing diofferent applications or different
+websites. To create these types of records you have two options A records and CNAME records.
+
+CNAME record is alias, A record is authoritative record that maps domain name to IP address.
+
+CNAME maps domain name to another doma name (to full qualified domain name)
+
+If i own domain name something.net:
+1) I need to the world where this domain name leaves to actually have a website.
+   For the root level domain, something.net you have to make it A record
+
+   If i want something like mail.something.net make CNAME record, it takes longer, all these
+   things are transparent to user.
+
+The Downside of web hosting companies is that, you are in shared enviroment.
+
+Altenative to web hosting companies may be to run your own server, give that server an IP
+address, perhaps with assistance of local system internent network admin, then inform your
+registrar what the IP address of the server. Then instance Apache, put your php code, html code
+on that server then you are on the internent and you are running the server yourself. Hopefully
+the IP address is static because if it dyanimic with DHCP(Dynamic Host Configuration Protocol)
+like an home network.
+
+Altenative if you don't want to buy the server, mantain the server, know how to plug in the
+server, that you want just want to outsource this part of the problem there is VPS (Virtual
+Private Servers) i.e Virtual machines. 
+
+Recommend firefox for teaching purposes because of rich available plugins that make development
+very nice.
+
+ You need unique IP address to run websites on SSL.
+
+ Changing code on the fly e.g. changing google search button on the fly is useful for designing
+ purposes but not much for programming purposes.
+
+ Once you have username and password for someone server you can connect throgh:
+ 1) SSH (Secure Shell): putty for windows. A client which allows you to connect to Linux Servers
+  and execute the same commands which you can execute on the Linux servers.
+
+2) SFTP (Secure File Transfer Protocal). It will give you access to your host provider/your
+   account on one of the servers and allow you to very easily upload many files at once.
+   e.g. Win SCP
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-----Lecture 1---$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+You pull up your browser, you hit www.google.com and you hit Enter:
+i) Your browser ask your local operating system the IP address of www.google.com
+ii) If your operating system does not know, it ask the local DNS server
+iii) Your ISP owns control of these local DNS servers
+iv) If your ISP does not know the IP address of www.google.com, they probably knows other
+DNS servers so they ask bigger fish followed by bigger fish.
+v) In worst case these root servers knows where the other authoritative for .com, .net are
+vi) That works because when you buy google.com you atleast have to tell your registrar the DNS
+server of hosting companies where your websites leaves.
+vii) That typically called ns1 and ns2. Just conventional but they are important details that there
+     are usually two DNS servers that inturn knows your websites IP address, knows your domain  
+     name email servers and the like.
+viii) Now my browser knows the IP address of www.google.com, it sends the virtual envelope a.k.a 
+      packet that sends from point A(you) to point B(google server) and inside that envelope is
+      that message get me the "/" , then there is remeinder of protocals that is being spoken
+      http. and the remeinder of the address that the user types in .i.e. Host HTTP header, and 
+      this is crucial for virtual hosting feature where by you can put many websites on the same
+      physical machine and iven on the same IP address, because browser will remeind the server
+      what the host name was actually requested, so that the web server can distinguish between
+      your website or someone else website.
+ix) This virtual envelope goes to google, google opens the envelope sees GET /... realizes you
+    want the root of our website and the google catches all that htmls, and other assets they 
+    compose their home page and they respond with the packet of their own or more packets of their
+    own your browser receives it, render it and the connection is closed.
+
+Browsers these days are failry smart, instead of asking the operating system again that
+browser catches that IP address of www.google.com. This just means it is slightly more efficient 
+than asking the operating system and certain more efficient than asking local DNS servers.
+
+But there is tradeoffs, Because if you are not just the user but web developer trying to build
+new website, if IP address cached, then you move website to another server or another virtual
+machine, there is need of constantly clearing your caches.
+
+One of the upsides of using chrome for primary development, is that it has incognito mode which
+can be used to a developer advantage, in that it will prevent cookies from being saved and other
+details from being cached.
+
+Put in mind to avoid some stupid cache issues so you don't waste of time caching the bug you have
+already fixed.
+
+------------------------------------- Point B (Server)---------------------------------------------------------------
+e.g. Apache web server.
+
+What things you can do with web server configuration.
+
+Virtual Hosting
+
+configurations in httpd.conf/apache.conf/apache2.conf --- typically the main configuration for
+apache based web server. Microsoft IIS has similarl features.
+
+# www.cs75.net
+<VirtualHost *:80>
+   CustomLog logs/www.cs75.net-access_log common
+   DocumentRoot /home/cscie75/srv/www/www.cs75.net/html
+   ErrorLog logs/www.cs75.net-error_log
+   ServerAdmin help@cs50.net
+   ServerAlias cs75.net
+   ServerName www.cs75.net
+</VirtualHost>
+<VirtualHost *:443>
+   CustomLog logs/www.cs75.net-access_log common
+   DocumentRoot /path/to/htdocs
+   ErrorLog logs/www.cs75.net-error_log
+   ServerAdmin dma1an@havard.edu
+   ServerAlias cs75.net
+   ServerName www.cs75.net
+   SSLCertificateChainFile /path/to/gd_bundle.crt
+   SSLCertificateFile /path/to/cs75.crt
+   SSLCertificateKeyFile /path/to cs75.key
+   SSLEngine on
+</VirtualHost>
+
+VirtualHost is the idea that web server can use the same IP address for multiple websites.
+
+Telling web server define virtual host at prot 80 of any IP address that server has.
+* denote anything for this case IP address
+ServerName is where VirtualHost name is defined.
+ServerAlias just cs75.net without www, this is one of the steps necessary to ensure that both
+www.cs75.net and cs75.net work.
+
+SSL (Secure Socket Layer) the protocal website uses to communicate securely with browsers.
+without SSL Certificate it will be labelled not secured website. Not necessary true insecure.
+
+You get private and public key with SSL Certificate. Prevent man in the middle attack
+
+TCP ports 80, 443:
+
+
+------------------------------------- PHP ---------------------------------------------------------
+One of the  best thing about php is it's documentation.
+
+resource type: pointer/reference to a resource for e.g of a file.
+
+Mixed: Take any type e.g. string, int etc.
+
+Callback: Function pointer
+
+Super Globals:
+i) $_COOKIE
+ii) $_ENV
+iii) $_FILES
+iv) $_GET
+v) $_POST
+vi) $_REQUEST
+vii) $_SERVER
+viii) $_SESSION
+
+
+On linux server navigate inside public_html directory
+
+type ls -l 
+
+-rw-r--r-- 1 john 197121 574 Oct 12 12:46 google.html
+
+-                     rw-       r--        r--
+initiator             owner     group      world
+
+initiator:
+          - means file
+          d means directory
+
+owner:
+      Can read and write
+
+
+group:
+      Can can only read
+
+world:
+      Can can only read
+
+type ls -al
+
+drwxr-xr-x 1 john 197121   0 Oct 12 12:46 .
+drwxr-xr-x 1 john 197121   0 Oct 12 12:45 ..
+-rw-r--r-- 1 john 197121 574 Oct 12 12:46 google.html
+
+. means current directory
+
+.. means parent directory
+
+chmod a+r google.html
+
+give all read permission on google.html
+
+
+------------------------------------------------Concept Note------------------------------------------
+
+After installing Linux on windows / git bash
+
+pwd : print working directory
+
+To navigate to C or E drive
+
+The drivers are mounted:
+
+Mounting a disk is essentially the operating system assigning a directory/file/folder to the 
+physical disk (or partition) to read the file system, and data on it. For instance your Windows 
+partition is “mounted” as C drive.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
